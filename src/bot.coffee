@@ -23,14 +23,17 @@ client = new irc.Client SERVER, NAME, {
   userName: NAME,
 }
 
+# Alias the `addListener` method, because it is a little too long.
+handle = (type, func) -> client.addListener type, func
+
 # Add a listener for the `raw` message type, this can be used for debugging.
-client.addListener 'raw', (msg) ->
+handle 'raw', (msg) ->
   console.log msg
 
 # Add a listener for the `message` message type, these are incoming messages.
-client.addListener 'message', (from, to, msg) ->
+handle 'message', (from, to, msg) ->
   console.log "\033[01;32m" + from + ' => ' + to + ': ' + msg + "\033[0m"
 
 # Add a listener for the `error` message type, these are for when shits gone bad.
-client.addListener 'error', (msg) ->
+handle 'error', (msg) ->
   console.log "\033[01;31m" + msg + "\033[0m"
