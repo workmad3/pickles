@@ -1,20 +1,13 @@
-# **Pickles** is a some-what intelligent IRC bot. Pickles was originally going
-# to be for Campfire, however Pickles lost his sleeping bag.
+irc     = require 'irc'
+sys     = require 'sys'
+env     = process.env
 
-irc = require 'irc'
-sys = require 'sys'
-env = process.env
+weather = require './weather'
 
-# Read in configuration options from environment variables.
-# * `IRC_SERVER`   - the address of the IRC server to connect to
-# * `IRC_NAME`     - the name you wish to give pickles
-# * `IRC_CHANNELS` - semi colon delimited list of channels (e.g. `#foo;#bar;#baz`)
 SERVER   = env.IRC_SERVER
 NAME     = env.IRC_NAME
 CHANNELS = env.IRC_CHANNELS.split ';'
 
-# Create a new `Client` instance and connect to the specific IRC network.
-# Pickles will join to each of the channels specified.
 client = new irc.Client SERVER, NAME, {
   autoRejoin: true
   channels: CHANNELS,
@@ -23,17 +16,30 @@ client = new irc.Client SERVER, NAME, {
   userName: NAME,
 }
 
-# Alias the `addListener` method, because it is a little too long.
-handle = (type, func) -> client.addListener type, func
+handle = (type, func) ->
+  client.addListener type, func
 
-# Add a listener for the `raw` message type, this can be used for debugging.
-handle 'raw', (msg) ->
-  console.log msg
+speak = (chan, msg) ->
+  client.say chan, msg
 
-# Add a listener for the `message` message type, these are incoming messages.
-handle 'message', (from, to, msg) ->
-  console.log "\033[01;32m" + from + ' => ' + to + ': ' + msg + "\033[0m"
+info = (msg) ->
+  console.log "\033[01;32m" + msg + "\033[0m"
 
-# Add a listener for the `error` message type, these are for when shits gone bad.
-handle 'error', (msg) ->
+error = (msg) ->
   console.log "\033[01;31m" + msg + "\033[0m"
+
+handle 'message', (from, to, msg) ->
+  info from + ' => ' + to + ': ' + msg
+
+  if wanted = msg.match /^!w(?:eather)?\s+(.*)/
+    weather.getWeather wanted[1], (err, weather) ->
+      if err or not weather
+        error 'weather:error => ' + err or 'Could not find weather for: ' + wanted[1]
+        speak to, 'Could not find weather for: ' + wanted[1]
+      else
+        speak to, 'Current: ' + weather[0]
+        speak to, 'Today: ' + weather[1]
+        speak to, 'Tomorrow: ' + weather[2]
+
+handle 'error', (msg) ->
+  error msg
