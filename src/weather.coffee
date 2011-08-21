@@ -4,72 +4,74 @@ url  = require 'url'
 query_to_woeid = {}
 
 getWhereOnEarthID = (wanted, callback) ->
-  path = '/v1/public/yql?q='
-  query = encodeURI 'select woeid from geo.places where text="' + wanted + '" limit 1&format=json'
-  opts = {
-    host: 'query.yahooapis.com',
-    path: path + query,
-    port: 80,
-  }
+  query = encodeURI "select woeid from geo.places where text=\"#{wanted}\" limit 1&format=json"
 
-  request = http.request opts, (resp) ->
-    json = ''
+  host = 'query.yahooapis.com'
+  path = "/v1/public/yql?q=#{query}"
+  opts =
+    host: host
+    path: path
+
+  req = http.request opts, (resp) ->
+    data = ''
+    resp.setEncoding 'utf8'
 
     resp.on 'data', (chunk) ->
-      json += chunk
+      data += chunk
 
     resp.on 'end', ->
-      results = JSON.parse json
-      woeid = results.query?.results?.place?.woeid
+      body = JSON.parse data
+      woeid = body.query?.results?.place?.woeid
 
       if not woeid
-        callback 'Unknown Where on Earth ID'
+        callback 'Could not find where on earth ID'
       else
         callback null, woeid
 
     resp.on 'error', (err) ->
       callback err
 
-  request.on 'error', (err) ->
+  req.on 'error', (err) ->
     callback err
 
-  request.end()
+  req.end()
 
 getWeatherInternal = (woeid, callback) ->
+  host = 'weather.yahooapis.com'
   path = '/forecastjson?w=' + woeid
-  opts = {
-    host: 'weather.yahooapis.com',
-    path: path,
-    port: 80,
-  }
+  opts =
+    host: host
+    path: path
 
-  request = http.request opts, (resp) ->
-    json = ''
+  req = http.request opts, (resp) ->
+    data = ''
+    resp.setEncoding 'utf8'
+
     resp.on 'data', (chunk) ->
-      json += chunk
+      data += chunk
 
     resp.on 'end', ->
-      results = JSON.parse json
+      body = JSON.parse data
 
-      cur = results.condition.text + ': ' + results.condition.temperature
+      cur = "#{body.condition.text}: #{body.condition.temperature}"
 
-      today = results.forecast[0].condition + ': ' +
-        'high - ' + results.forecast[0].high_temperature + ', ' +
-        'low - ' + results.forecast[0].low_temperature
+      today = "#{body.forecast[0].condition}: " +
+        "high - #{body.forecast[0].high_temperature}, " +
+        "low - #{body.forecast[0].low_temperature}"
 
-      tomorrow = results.forecast[1].condition + ': ' +
-        'high - ' + results.forecast[1].high_temperature + ', ' +
-        'low - ' + results.forecast[1].low_temperature
+      tomorrow = "#{body.forecast[1].condition}: " +
+        "high - #{body.forecast[1].high_temperature}, " +
+        "low - #{body.forecast[1].low_temperature}"
 
       callback null, [cur, today, tomorrow]
 
     resp.on 'error', (err) ->
       callback err
 
-  request.on 'error', (err) ->
+  req.on 'error', (err) ->
     callback err
 
-  request.end()
+  req.end()
 
 getWeather = (location, callback) ->
   seen = query_to_woeid[location]
@@ -83,12 +85,12 @@ getWeather = (location, callback) ->
   else
     getWhereOnEarthID location, (err, woeid) ->
       if err
-        callback err.message or err
+        callback err
       else
         query_to_woeid[location] = woeid
         getWeatherInternal woeid, (err, weather) ->
           if err
-            callback err.message or err
+            callback err
           else
             callback null, weather
 
