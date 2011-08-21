@@ -1,16 +1,13 @@
 http = require 'http'
-url  = require 'url'
 
 query_to_woeid = {}
 
 getWhereOnEarthID = (wanted, callback) ->
   query = encodeURI "select woeid from geo.places where text=\"#{wanted}\" limit 1&format=json"
 
-  host = 'query.yahooapis.com'
-  path = "/v1/public/yql?q=#{query}"
   opts =
-    host: host
-    path: path
+    host: 'query.yahooapis.com'
+    path: "/v1/public/yql?q=#{query}"
 
   req = http.request opts, (resp) ->
     data = ''
@@ -37,11 +34,9 @@ getWhereOnEarthID = (wanted, callback) ->
   req.end()
 
 getWeatherInternal = (woeid, callback) ->
-  host = 'weather.yahooapis.com'
-  path = '/forecastjson?w=' + woeid
   opts =
-    host: host
-    path: path
+    host: 'weather.yahooapis.com'
+    path: "/forecastjson?w=#{woeid}"
 
   req = http.request opts, (resp) ->
     data = ''
@@ -53,17 +48,16 @@ getWeatherInternal = (woeid, callback) ->
     resp.on 'end', ->
       body = JSON.parse data
 
-      cur = "#{body.condition.text}: #{body.condition.temperature}"
+      weather =
+        current: "#{body.condition.text}: #{body.condition.temperature}"
+        today: "#{body.forecast[0].condition}: " +
+          "high - #{body.forecast[0].high_temperature}, " +
+          "low - #{body.forecast[0].low_temperature}"
+        tomorrow: "#{body.forecast[1].condition}: " +
+          "high - #{body.forecast[1].high_temperature}, " +
+          "low - #{body.forecast[1].low_temperature}"
 
-      today = "#{body.forecast[0].condition}: " +
-        "high - #{body.forecast[0].high_temperature}, " +
-        "low - #{body.forecast[0].low_temperature}"
-
-      tomorrow = "#{body.forecast[1].condition}: " +
-        "high - #{body.forecast[1].high_temperature}, " +
-        "low - #{body.forecast[1].low_temperature}"
-
-      callback null, [cur, today, tomorrow]
+      callback null, weather
 
     resp.on 'error', (err) ->
       callback err

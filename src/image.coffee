@@ -1,5 +1,4 @@
 http = require 'http'
-url  = require 'url'
 
 getImage = (phrase, callback) ->
   host = 'ajax.googleapis.com'
