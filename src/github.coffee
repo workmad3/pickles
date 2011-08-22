@@ -1,6 +1,6 @@
 https = require 'https'
 
-getLatestCommit = (user, proj, callback) ->
+exports.getLatestCommit = getLatestCommit = (user, proj, callback) ->
   opts =
     host: 'api.github.com'
     path: "/repos/#{user}/#{proj}/commits?per_page=1"
@@ -30,5 +30,3 @@ getLatestCommit = (user, proj, callback) ->
     callback err
 
   req.end()
-
-exports.getLatestCommit = getLatestCommit

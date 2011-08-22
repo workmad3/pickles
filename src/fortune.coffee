@@ -1,6 +1,6 @@
 http = require 'http'
 
-getFortune = (callback) ->
+exports.getFortune = getFortune = (callback) ->
   opts =
     host: 'www.fortunefortoday.com'
     path: '/getfortuneonly.php'
@@ -28,5 +28,3 @@ getFortune = (callback) ->
     callback err
 
   req.end()
-
-exports.getFortune = getFortune

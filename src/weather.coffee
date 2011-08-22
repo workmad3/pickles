@@ -67,7 +67,7 @@ getWeatherInternal = (woeid, callback) ->
 
   req.end()
 
-getWeather = (location, callback) ->
+exports.getWeather = getWeather = (location, callback) ->
   seen = query_to_woeid[location]
 
   if seen
@@ -87,5 +87,3 @@ getWeather = (location, callback) ->
             callback err
           else
             callback null, weather
-
-exports.getWeather = getWeather

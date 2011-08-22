@@ -1,6 +1,6 @@
 http = require 'http'
 
-getImage = (phrase, callback) ->
+exports.getImage = getImage = (phrase, callback) ->
   host = 'ajax.googleapis.com'
   path = "/ajax/services/search/images?v=1.0&rsz=8&safe=active&q=#{phrase}"
 
@@ -36,5 +36,3 @@ getImage = (phrase, callback) ->
     callback err
 
   req.end()
-
-exports.getImage = getImage

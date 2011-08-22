@@ -6,6 +6,7 @@ weather = require './weather'
 image   = require './image'
 github  = require './github'
 fortune = require './fortune'
+seen    = require './seen'
 
 SERVER   = env.IRC_SERVER
 NAME     = env.IRC_NAME
@@ -35,10 +36,8 @@ error = (msg) ->
 handle 'message', (from, to, msg) ->
   info "#{from} => #{to}: #{msg}"
 
-  #
-  # weather me
-  #
   if wanted = msg.match /weather me (.*)/i
+    seen.setSeenUser from, to
     location = wanted[1]
     weather.getWeather location, (err, weather) ->
       if err or not weather
@@ -49,10 +48,8 @@ handle 'message', (from, to, msg) ->
         speak to, "Today: #{weather.today}"
         speak to, "Tomorrow: #{weather.tomorrow}"
 
-  #
-  # image me
-  #
   if wanted = msg.match /image me (.*)/i
+    seen.setSeenUser from, to
     phrase = wanted[1]
     image.getImage phrase, (err, img) ->
       if err or not img
@@ -61,10 +58,8 @@ handle 'message', (from, to, msg) ->
       else
         speak to, img
 
-  #
-  # commit me
-  #
   if wanted = msg.match /commit me (.*) (.*)/i
+    seen.setSeenuser from, to
     user = wanted[1]
     proj = wanted[2]
     github.getLatestCommit user, proj, (err, commit) ->
@@ -74,16 +69,23 @@ handle 'message', (from, to, msg) ->
       else
         speak to, "#{commit.author} commited '#{commit.message}' to #{user}/#{proj} on #{commit.date}"
 
-  #
-  # fortune me
-  #
   if msg.match /fortune me/i
+    seen.setSeenUser from, to
     fortune.getFortune (err, data) ->
       if err or not data
-        # error "fortune:error => #{err}"
+        error "fortune:error => #{err}"
         speak to, "Could not get fortune"
       else
         speak to, data
+
+  if wanted = msg.match /seen (\w+)$/i
+    seen.setSeenUser from, to
+    user = wanted[1]
+    seen.getSeenUser user, (err, at) ->
+      if err or not at
+        speak to, "#{from}: #{err}"
+      else
+        speak to, "#{from}: #{at}"
 
 handle 'error', (msg) ->
   error msg
