@@ -5,6 +5,7 @@ env     = process.env
 weather = require './weather'
 image   = require './image'
 github  = require './github'
+fortune = require './fortune'
 
 SERVER   = env.IRC_SERVER
 NAME     = env.IRC_NAME
@@ -72,6 +73,17 @@ handle 'message', (from, to, msg) ->
         speak to, "Could not get latest commit for: #{user}/#{proj}"
       else
         speak to, "#{commit.author} commited '#{commit.message}' to #{user}/#{proj} on #{commit.date}"
+
+  #
+  # fortune me
+  #
+  if msg.match /fortune me/i
+    fortune.getFortune (err, data) ->
+      if err or not data
+        # error "fortune:error => #{err}"
+        speak to, "Could not get fortune"
+      else
+        speak to, data
 
 handle 'error', (msg) ->
   error msg
