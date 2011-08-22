@@ -87,5 +87,9 @@ handle 'message', (from, to, msg) ->
       else
         speak to, "#{from}: #{at}"
 
+  if msg.match /roll me/i
+    seen.setSeenUser from, to
+    speak to, "#{from} rolls a six sided die and gets #{Math.floor(Math.random() * 6) + 1}"
+
 handle 'error', (msg) ->
   error msg
