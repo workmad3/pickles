@@ -10,7 +10,7 @@ Coming soon...
 
 ## USAGE
 
-Coming soon...
+Easy as running the command `node lib/bot.js`
 
 ## CONTRIBUTE
 
