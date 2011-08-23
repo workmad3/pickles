@@ -6,11 +6,13 @@ Pickles is a bot written in CoffeeScript on Node for Campfire and/or IRC.
 
 ## INSTALLATION
 
-Coming soon...
+1. Clone the repository
+2. Change into the directory
+3. Install the dependencies with `npm install`
 
 ## USAGE
 
-Coming soon...
+Easy as running the command `node lib/bot.js`
 
 ## CONTRIBUTE
 
