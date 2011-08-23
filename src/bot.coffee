@@ -14,6 +14,7 @@ irc_channels = env.IRC_CHANNELS.split ';'
 
 descriptions = {}
 handlers = []
+client = null
 
 dispatch = (message) ->
   for pair in handlers
