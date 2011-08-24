@@ -97,14 +97,13 @@ hear /commit me (.*) (.*)/i, (message) ->
 hear /fortune me/i, (message) ->
   console.log 'fortune:ok => heard "fortune me"'
 
-#   if wanted = msg.match /fortune me/i
-#     seen.setSeenUser from, to
-#     fortune.getFortune (err, data) ->
-#       if err or not data
-#         error "fortune:error => #{err}"
-#         speak to, "Could not get fortune"
-#       else
-#         speak to, data
+  seen.setSeenUser message.from, message.to
+  fortune.getFortune (err, fortune) ->
+    if err or not fortune
+      error "fortune:error => #{err}"
+      say message.to, "Could not get fortune"
+    else
+      say message.to, fortune
 
 hear /seen (\w+)$/i, (message) ->
   console.log 'seen:ok => heard "seen"'
