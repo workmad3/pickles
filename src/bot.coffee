@@ -106,8 +106,6 @@ hear /fortune me/i, (message) ->
       say message.to, fortune
 
 hear /seen (\w+)$/i, (message) ->
-  console.log 'seen:ok => heard "seen"'
-
   seen.setSeenUser message.from, message.to
   user = message.match[1]
   seen.getSeenUser user, (err, msg) ->
@@ -117,8 +115,5 @@ hear /seen (\w+)$/i, (message) ->
       say message.to, "#{message.from}: #{msg}"
 
 hear /roll me/i, (message) ->
-  console.log 'roll:ok => heard "roll me"'
-
-#   if wanted = msg.match /roll me/i
-#     seen.setSeenUser from, to
-#     speak to, "#{from} rolls a six sided die and gets #{Math.floor(Math.random() * 6) + 1}"
+  seen.setSeenUser message.from, message.to
+  say message.to, "#{message.from} rolls a six sided die and gets #{Math.floor(Math.random() * 6) + 1}"
