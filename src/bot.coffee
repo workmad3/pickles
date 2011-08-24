@@ -19,8 +19,9 @@ client = null
 dispatch = (message) ->
   for pair in handlers
     [ pattern, handler ] = pair
-    if message.from isnt irc_name and match = message.match pattern
+    if message.from isnt irc_name and match = message.message.match pattern
       message.match = match
+      console.log message
       handler message
 
 desc = (phrase, functionality) ->
@@ -29,8 +30,8 @@ desc = (phrase, functionality) ->
 hear = (pattern, callback) ->
   handlers.push [ pattern, callback ]
 
-say = (channels, message) ->
-  client.say chan, message for chan in channels
+say = (channel, message) ->
+  client.say channel, message
 
 listen = ->
   opts =
@@ -42,7 +43,8 @@ listen = ->
 
   client = new irc.Client irc_server, irc_name, opts
   client.addListener 'message', (from, to, message) ->
-    dispatch message
+    msg = { from: from, to: to, message: message }
+    dispatch msg
     success "#{from} => #{to}: #{message}"
   client.addListener 'error', (message) ->
     error message
@@ -60,19 +62,16 @@ catch err
   error "Error connecting to server: #{err}"
 
 hear /weather me (.*)/i, (message) ->
-  console.log 'weather:ok => heard "weather me"'
-
-#   if wanted = msg.match /weather me (.*)/i
-#     seen.setSeenUser from, to
-#     location = wanted[1]
-#     weather.getWeather location, (err, weather) ->
-#       if err or not weather
-#         error "weather:error => #{err}"
-#         speak to, "Could not find weather for: #{location}"
-#       else
-#         speak to, "Current: #{weather.current}"
-#         speak to, "Today: #{weather.today}"
-#         speak to, "Tomorrow: #{weather.tomorrow}"
+  seen.setSeenUser message.from, message.to
+  location = message.match[1]
+  weather.getWeather location, (err, weather) ->
+    if err or not weather
+      err "weather:error => #{err}"
+      say message.to, "Could not find weather for '#{location}'"
+    else
+      say message.to, "Current: #{weather.current}"
+      say message.to, "Today: #{weather.today}"
+      say message.to, "Tomorrow: #{weather.tomorrow}"
 
 hear /image me (.*)/i, (message) ->
   console.log 'image:ok => heard "image me"'
