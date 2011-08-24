@@ -84,18 +84,15 @@ hear /image me (.*)/i, (message) ->
         say message.to, image
 
 hear /commit me (.*) (.*)/i, (message) ->
-  console.log 'commit:ok => heard "commit me"'
-
-#   if wanted = msg.match /commit me (.*) (.*)/i
-#     seen.setSeenuser from, to
-#     user = wanted[1]
-#     proj = wanted[2]
-#     github.getLatestCommit user, proj, (err, commit) ->
-#       if err or not commit
-#         error "github:error => #{err}"
-#         speak to, "Could not get latest commit for: #{user}/#{proj}"
-#       else
-#         speak to, "#{commit.author} commited '#{commit.message}' to #{user}/#{proj} on #{commit.date}"
+  seen.setSeenUser message.from, message.to
+  user = message.match[1]
+  proj = message.match[2]
+  github.getLatestCommit user, proj, (err, commit) ->
+    if err or not commit
+      error "github:error => #{err}"
+      say message.to, "Could not get latest commit for '#{user}/#{proj}'"
+    else
+      say message.to, "#{commit.author} commited '#{commit.message}' to #{user}/#{proj} on #{commit.date}"
 
 hear /fortune me/i, (message) ->
   console.log 'fortune:ok => heard "fortune me"'
