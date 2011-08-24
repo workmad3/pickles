@@ -74,17 +74,14 @@ hear /weather me (.*)/i, (message) ->
       say message.to, "Tomorrow: #{weather.tomorrow}"
 
 hear /image me (.*)/i, (message) ->
-  console.log 'image:ok => heard "image me"'
-
-#   if wanted = msg.match /image me (.*)/i
-#     seen.setSeenUser from, to
-#     phrase = wanted[1]
-#     image.getImage phrase, (err, img) ->
-#       if err or not img
-#         error "image:error => #{err}"
-#         speak to, "Could not find image for: #{phrase}"
-#       else
-#         speak to, img
+  seen.setSeenUser message.from, message.to
+  phrase = message.match[1]
+  image.getImage phrase, (err, image) ->
+      if err or not image
+        error "image:error => #{err}"
+        say message.to, "Could not find an image for '#{phrase}'"
+      else
+        say message.to, image
 
 hear /commit me (.*) (.*)/i, (message) ->
   console.log 'commit:ok => heard "commit me"'
