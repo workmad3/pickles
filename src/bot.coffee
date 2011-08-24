@@ -108,14 +108,13 @@ hear /fortune me/i, (message) ->
 hear /seen (\w+)$/i, (message) ->
   console.log 'seen:ok => heard "seen"'
 
-#   if wanted = msg.match /seen (\w+)$/i
-#     seen.setSeenUser from, to
-#     user = wanted[1]
-#     seen.getSeenUser user, (err, at) ->
-#       if err or not at
-#         speak to, "#{from}: #{err}"
-#       else
-#         speak to, "#{from}: #{at}"
+  seen.setSeenUser message.from, message.to
+  user = message.match[1]
+  seen.getSeenUser user, (err, msg) ->
+    if err or not msg
+      say message.to, "#{message.from}: #{err}"
+    else
+      say message.to, "#{message.from}: #{msg}"
 
 hear /roll me/i, (message) ->
   console.log 'roll:ok => heard "roll me"'
