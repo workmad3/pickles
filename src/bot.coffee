@@ -24,9 +24,6 @@ dispatch = (message) ->
       console.log message
       handler message
 
-desc = (phrase, functionality) ->
-  descriptions[ phrase ] = functionality
-
 hear = (pattern, callback) ->
   handlers.push [ pattern, callback ]
 
@@ -61,17 +58,6 @@ try
 catch err
   error "Error connecting to server: #{err}"
 
-hear /help me/i, (message) ->
-  seen.setSeenUser message.from, message.to
-  say message.to, 'I listen for the following...'
-  for phrase, functionality of descriptions
-    if functionality
-      output = "#{phrase}: #{functionality}"
-    else
-      output = phrase
-    say message.to, output
-
-desc 'weather me PLACE'
 hear /weather me (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   location = message.match[1]
@@ -84,7 +70,6 @@ hear /weather me (.*)/i, (message) ->
       say message.to, "Today: #{weather.today}"
       say message.to, "Tomorrow: #{weather.tomorrow}"
 
-desc 'image me PHRASE'
 hear /image me (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   phrase = message.match[1]
@@ -95,7 +80,6 @@ hear /image me (.*)/i, (message) ->
       else
         say message.to, image
 
-desc 'commit me USER PROJ'
 hear /commit me (.*) (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
@@ -107,7 +91,6 @@ hear /commit me (.*) (.*)/i, (message) ->
     else
       say message.to, "#{commit.author} commited '#{commit.message}' to #{user}/#{proj} on #{commit.date}"
 
-desc 'fortune me'
 hear /fortune me/i, (message) ->
   seen.setSeenUser message.from, message.to
   fortune.getFortune (err, fortune) ->
@@ -117,7 +100,6 @@ hear /fortune me/i, (message) ->
     else
       say message.to, fortune
 
-desc 'seen USER'
 hear /seen (\w+)$/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
@@ -127,7 +109,6 @@ hear /seen (\w+)$/i, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
-desc 'roll me'
 hear /roll me/i, (message) ->
   seen.setSeenUser message.from, message.to
   say message.to, "#{message.from} rolls a six sided die and gets #{Math.floor(Math.random() * 6) + 1}"
