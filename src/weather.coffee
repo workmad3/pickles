@@ -1,4 +1,4 @@
-http = require 'http'
+http = require "http"
 
 query_to_woeid = {}
 
@@ -6,47 +6,51 @@ getWhereOnEarthID = (wanted, callback) ->
   query = encodeURI "select woeid from geo.places where text=\"#{wanted}\" limit 1&format=json"
 
   opts =
-    host: 'query.yahooapis.com'
+    host: "query.yahooapis.com"
     path: "/v1/public/yql?q=#{query}"
 
-  req = http.request opts, (resp) ->
-    data = ''
-    resp.setEncoding 'utf8'
+  request = http.request opts, (response) ->
+    data = ""
 
-    resp.on 'data', (chunk) ->
+    response.setEncoding "utf8"
+
+    response.on "data", (chunk) ->
       data += chunk
 
-    resp.on 'end', ->
+    response.on "end", ->
       body = JSON.parse data
       woeid = body.query?.results?.place?.woeid
 
       if not woeid
-        callback 'Could not find where on earth ID'
+        callback "Could not find where on earth ID"
       else
         callback null, woeid
 
-    resp.on 'error', (err) ->
-      callback err
+    response.on "error", (error) ->
+      callback error
 
-  req.on 'error', (err) ->
-    callback err
+  request.on "error", (error) ->
+    callback error
 
-  req.end()
+  request.end()
 
 getWeatherInternal = (woeid, callback) ->
   opts =
-    host: 'weather.yahooapis.com'
+    host: "weather.yahooapis.com"
     path: "/forecastjson?w=#{woeid}"
 
-  req = http.request opts, (resp) ->
-    data = ''
-    resp.setEncoding 'utf8'
+  request = http.request opts, (response) ->
+    data = ""
 
-    resp.on 'data', (chunk) ->
+    response.setEncoding "utf8"
+
+    response.on "data", (chunk) ->
       data += chunk
 
-    resp.on 'end', ->
+    response.on "end", ->
       body = JSON.parse data
+
+      return if not body.condition
 
       weather =
         current: "#{body.condition.text}: #{body.condition.temperature}"
@@ -59,13 +63,13 @@ getWeatherInternal = (woeid, callback) ->
 
       callback null, weather
 
-    resp.on 'error', (err) ->
-      callback err
+    response.on "error", (error) ->
+      callback error
 
-  req.on 'error', (err) ->
-    callback err
+  request.on "error", (error) ->
+    callback error
 
-  req.end()
+  request.end()
 
 exports.getWeather = getWeather = (location, callback) ->
   seen = query_to_woeid[location]

@@ -1,17 +1,17 @@
-https = require 'https'
+https = require "https"
 
 exports.getLatestCommit = getLatestCommit = (user, proj, callback) ->
   opts =
-    host: 'api.github.com'
+    host: "api.github.com"
     path: "/repos/#{user}/#{proj}/commits?per_page=1"
 
-  req = https.request opts, (resp) ->
-    data = ''
+  request = https.request opts, (response) ->
+    data = ""
 
-    resp.on 'data', (chunk) ->
+    response.on "data", (chunk) ->
       data += chunk
 
-    resp.on 'end', ->
+    response.on "end", ->
       body = JSON.parse data
 
       if not body[0]
@@ -23,10 +23,10 @@ exports.getLatestCommit = getLatestCommit = (user, proj, callback) ->
           message: body[0].commit.message
         callback null, commit
 
-    resp.on 'error', (err) ->
-      callback err
+    response.on "error", (error) ->
+      callback error
 
-  req.on 'error', (err) ->
-    callback err
+  request.on "error", (error) ->
+    callback error
 
-  req.end()
+  request.end()

@@ -6,8 +6,7 @@ exports.setSeenUser = setSeenuser = (user, channel) ->
     time: new Date()
 
 exports.getSeenUser = getSeenUser = (user, callback) ->
-  user = user.toLowerCase()
-  seen = seen_list[ user ]
+  seen = seen_list[ user.toLowerCase() ]
 
   if not seen
     callback "not seen #{user} yet, sorry"

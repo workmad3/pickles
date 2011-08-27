@@ -1,38 +1,39 @@
-http = require 'http'
+http = require "http"
 
 exports.getImage = getImage = (phrase, callback) ->
-  host = 'ajax.googleapis.com'
-  path = "/ajax/services/search/images?v=1.0&rsz=8&safe=active&q=#{phrase}"
+  host = "ajax.googleapis.com"
+  path = "/ajax/services/search/images?v=1.0&rsz=8&q=#{encodeURI phrase}"
 
   client = http.createClient 80, host
 
   headers =
-    'Host': 'ajax.googleapis.com'
+    Host: "ajax.googleapis.com"
 
-  req = client.request 'GET', path, headers
+  request = client.request "GET", path, headers
 
-  req.on 'response', (resp) ->
-    if resp.statusCode is 200
-      data = ''
-      resp.setEncoding 'utf8'
+  request.on "response", (response) ->
+    if response.statusCode is 200
+      data = ""
 
-      resp.on 'data', (chunk) ->
+      response.setEncoding "utf8"
+
+      response.on "data", (chunk) ->
         data += chunk
 
-      resp.on 'end', ->
+      response.on "end", ->
         body = JSON.parse data
         images = body.responseData.results
-        image  = images[ Math.floor Math.random()*images.length ]
+        image  = images[ Math.floor Math.random() * images.length ]
 
         if not image
-          callback 'Could not find results for phrase'
+          callback "Could not find results for phrase"
         else
           callback null, image.unescapedUrl
 
-      resp.on 'error', (err) ->
-        callback err
+      response.on "error", (error) ->
+        callback error
 
-  req.on 'error', (err) ->
-    callback err
+  request.on "error", (error) ->
+    callback error
 
-  req.end()
+  request.end()
