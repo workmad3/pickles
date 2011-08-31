@@ -1,3 +1,5 @@
+require "./date"
+
 seen_list = {}
 
 exports.setSeenUser = setSeenuser = (user, channel) ->
@@ -11,4 +13,4 @@ exports.getSeenUser = getSeenUser = (user, callback) ->
   if not seen
     callback "not seen #{user} yet, sorry"
   else
-    callback null, "I last saw #{user} speak in #{seen.channel} at #{seen.time}"
+    callback null, "I last saw #{user} speak in #{seen.channel} at #{seen.time.toRelativeTime()}"
