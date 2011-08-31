@@ -6,6 +6,8 @@ exports.setSeenUser = setSeenuser = (user, channel) ->
     time: new Date()
 
 exports.getSeenUser = getSeenUser = (user, callback) ->
+  return "That's me." if user.toLowerCast() is "pickles"
+
   seen = seen_list[ user.toLowerCase() ]
 
   if not seen
@@ -31,6 +33,6 @@ relative = (olderDate, newerDate) ->
   
   while i < conversions.length
     result = Math.floor(milliseconds / conversions[i][1])
-    return result + " " + conversions[i][0] + " ago"  if result >= 2
+    return result + " " + conversions[i][0] + " ago"  if result >= 1
     i++
   "1 second ago"
