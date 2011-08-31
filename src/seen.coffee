@@ -11,7 +11,7 @@ exports.getSeenUser = getSeenUser = (user, callback) ->
   if not seen
     callback "not seen #{user} yet, sorry"
   else
-    callback null, "I last saw #{user} speak in #{seen.channel} at #{seen.time.toRelativeTime()}"
+    callback null, "I last saw #{user} speak in #{seen.channel} #{seen.time.toRelativeTime()}"
 
 Date::toRelativeTime = (now_threshold) ->
   delta = new Date - @
@@ -19,7 +19,7 @@ Date::toRelativeTime = (now_threshold) ->
   now_threshold = parseInt now_threshold, 10
   now_threshold = 0 if isNaN now_threshold
 
-  return "Just now" if delta <= now_threshold
+  return "just now" if delta <= now_threshold
 
   units = null
   conversions =
