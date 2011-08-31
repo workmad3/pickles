@@ -17,7 +17,7 @@ Date::toRelativeTime = (now_threshold) ->
   delta = new Date - @
 
   now_threshold = parseInt now_threshold, 10
-  now_threshold = 0 if isNan now_threshold
+  now_threshold = 0 if isNaN now_threshold
 
   return "Just now" if delta <= now_threshold
 
