@@ -21,12 +21,12 @@ relative = (olderDate, newerDate) ->
 
   milliseconds = newerDate - olderDate
   conversions = [
-    [ "years", 31518720000 ],
-    [ "months", 2626560000 ],
-    [ "days", 86400000 ],
-    [ "hours", 3600000 ],
-    [ "minutes", 60000 ],
-    [ "seconds", 1000 ]
+    [ "year(s)", 31518720000 ],
+    [ "month(s)", 2626560000 ],
+    [ "day(s)", 86400000 ],
+    [ "hour(s)", 3600000 ],
+    [ "minute(s)", 60000 ],
+    [ "second(s)", 1000 ]
   ]
 
   i = 0
