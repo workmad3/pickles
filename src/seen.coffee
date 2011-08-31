@@ -35,4 +35,4 @@ relative = (olderDate, newerDate) ->
     result = Math.floor(milliseconds / conversions[i][1])
     return result + " " + conversions[i][0] + " ago"  if result >= 1
     i++
-  "1 second ago"
+  "just now"
