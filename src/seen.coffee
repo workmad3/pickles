@@ -6,7 +6,7 @@ exports.setSeenUser = setSeenuser = (user, channel) ->
     time: new Date()
 
 exports.getSeenUser = getSeenUser = (user, callback) ->
-  return "That's me." if user.toLowerCast() is "pickles"
+  return "That's me." if user.toLowerCase() is "pickles"
 
   seen = seen_list[ user.toLowerCase() ]
 
