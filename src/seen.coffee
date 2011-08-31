@@ -11,9 +11,9 @@ exports.getSeenUser = getSeenUser = (user, callback) ->
   if not seen
     callback "not seen #{user} yet, sorry"
   else
-    callback null, "I last saw #{user} speak in #{seen.channel} #{seen.time.toRelativeTime()}"
+    callback null, "I last saw #{user} speak in #{seen.channel} #{relative seen.time, new Date}"
 
-Date::toRelativeDate = (olderDate, newerDate) ->
+relative = (olderDate, newerDate) ->
   olderDate = new Date olderDate if typeof olderDate is "string"
   newerDate = new Date newerDate if typeof newerDate is "string"
 
