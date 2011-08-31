@@ -13,32 +13,24 @@ exports.getSeenUser = getSeenUser = (user, callback) ->
   else
     callback null, "I last saw #{user} speak in #{seen.channel} #{seen.time.toRelativeTime()}"
 
-Date::toRelativeTime = (now_threshold) ->
-  delta = new Date - @
+relativeDate = (olderDate, newerDate) ->
+  olderDate = new Date olderDate if typeof olderDate is "string"
+  newerDate = new Date newerDate if typeof newerDate is "string"
 
-  now_threshold = parseInt now_threshold, 10
-  now_threshold = 0 if isNaN now_threshold
+  milliseconds = newerDate - olderDate
+  conversions = [
+    [ "years", 31518720000 ],
+    [ "months", 2626560000 ],
+    [ "days", 86400000 ],
+    [ "hours", 3600000 ],
+    [ "minutes", 60000 ],
+    [ "seconds", 1000 ]
+  ]
 
-  return "just now" if delta <= now_threshold
-
-  units = null
-  conversions =
-    millisecond: 1
-    second: 1000
-    minute: 60
-    hour: 60
-    day: 24
-    month: 30
-    year: 12
-
-  for key in conversions
-    break if delta < conversions[key]
-    units = key
-    delta /= conversions[key]
-
-  delta = Math.floor delta
-  units += "s" if delta isnt 1
-  [ delta, units, "ago" ].join " "
-
-Date.fromString = (str) ->
-  new Date Date.parse str
+  i = 0
+  
+  while i < conversions.length
+    result = Math.floor(milliseconds / conversions[i][1])
+    return result + " " + conversions[i][0] + " ago"  if result >= 2
+    i++
+  "1 second ago"
