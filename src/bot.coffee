@@ -12,6 +12,7 @@ irc_name     = process.env.IRC_NAME
 irc_channels = process.env.IRC_CHANNELS.split ";"
 
 handlers = []
+client   = null
 
 dispatch = (message) ->
   for pair in handlers
