@@ -1,19 +1,34 @@
-seen_list = {}
+redis = require "redis"
+
+host = process.env.REDISTOGO_HOST
+port = process.env.REDISTOGO_PORT
+pass = process.env.REDISTOGO_PASS
+
+connect_redis = ->
+  client = redis.createClient port, host
+  client.on "error", (err) ->
+    console.log err
+  client.auth pass
+  client
 
 exports.setSeenUser = setSeenuser = (user, channel) ->
-  seen_list[ user.toLowerCase() ] =
-    channel: channel
-    time: new Date()
+  client = connect_redis()
+  client.hset "user:#{user.toLowerCase()}", "channel", channel
+  client.hset "user:#{user.toLowerCase()}", "time", new Date
+  client.quit()
 
 exports.getSeenUser = getSeenUser = (user, callback) ->
   return callback null, "That's me!" if user.toLowerCase() is "pickles"
 
-  seen = seen_list[ user.toLowerCase() ]
+  client = connect_redis()
 
-  if not seen
-    callback "not seen #{user} yet, sorry"
-  else
-    callback null, "I last saw #{user} speak in #{seen.channel} #{relative seen.time, new Date}"
+  client.hgetall "user:#{user.toLowerCase()}", (err, reply) ->
+    if not reply.channel and not reply.time
+      callback "not seen #{user} yet, sorry"
+    else
+      callback null, "I last saw #{user} speak in #{reply.channel} #{relative reply.time, new Date}"
+
+  client.quit()
 
 relative = (olderDate, newerDate) ->
   olderDate = new Date olderDate if typeof olderDate is "string"
