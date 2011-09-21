@@ -2,7 +2,7 @@
 
 ## DESCRIPTION
 
-Pickles is an IRC bot written in CoffeeScript running on Node.js.
+Node.js IRC bot written in CoffeeScript.
 
 ## INSTALLATION
 
