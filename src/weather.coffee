@@ -53,13 +53,13 @@ getWeatherInternal = (woeid, callback) ->
       return if not body.condition
 
       weather =
-        current: "#{body.condition.text}: #{body.condition.temperature}"
+        current: "#{body.condition.text}: #{body.condition.temperature}°C"
         today: "#{body.forecast[0].condition}: " +
-          "high - #{body.forecast[0].high_temperature}, " +
-          "low - #{body.forecast[0].low_temperature}"
+          "high - #{body.forecast[0].high_temperature}°C, " +
+          "low - #{body.forecast[0].low_temperature}°C"
         tomorrow: "#{body.forecast[1].condition}: " +
-          "high - #{body.forecast[1].high_temperature}, " +
-          "low - #{body.forecast[1].low_temperature}"
+          "high - #{body.forecast[1].high_temperature}°C, " +
+          "low - #{body.forecast[1].low_temperature}°C"
 
       callback null, weather
 
