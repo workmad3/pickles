@@ -37,7 +37,7 @@ getWhereOnEarthID = (wanted, callback) ->
 getWeatherInternal = (woeid, callback) ->
   opts =
     host: "weather.yahooapis.com"
-    path: "/forecastjson?w=#{woeid}"
+    path: "/forecastjson?w=#{woeid}&u=c"
 
   request = http.request opts, (response) ->
     data = ""
