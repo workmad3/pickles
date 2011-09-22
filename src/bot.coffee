@@ -5,6 +5,7 @@ weather = require "./weather"
 image   = require "./image"
 github  = require "./github"
 fortune = require "./fortune"
+isup    = require "./isitup"
 seen    = require "./seen"
 
 irc_server   = process.env.IRC_SERVER
@@ -108,6 +109,15 @@ hear /^roll me ?(\d*)/i, (message) ->
     say message.to, "#{message.from} I cannot make the warp core stabalizers divide by 0!"
   else
     say message.to, "#{message.from} rolls a #{sides} sided die and gets #{Math.floor(Math.random() * sides) + 1}"
+
+hear /^is (.*) up/, (message) ->
+  seen.setSeenUser message.from, message.to
+  url = message.match[1]
+  isup.isItUp url, (err, msg) ->
+    if err or not msg
+      say message.to, "#{message.from}: #{err}"
+    else
+      say message.to, "#{message.from}: #{msg}"
 
 hear /.*/, (message) ->
   seen.setSeenUser message.from, message.to
