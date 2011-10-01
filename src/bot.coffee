@@ -7,6 +7,7 @@ github  = require "./github"
 fortune = require "./fortune"
 isup    = require "./isitup"
 seen    = require "./seen"
+time    = require "./time"
 
 irc_server   = process.env.IRC_SERVER
 irc_name     = process.env.IRC_NAME
@@ -114,6 +115,15 @@ hear /^is (.*) up/, (message) ->
   seen.setSeenUser message.from, message.to
   url = message.match[1]
   isup.isItUp url, (err, msg) ->
+    if err or not msg
+      say message.to, "#{message.from}: #{err}"
+    else
+      say message.to, "#{message.from}: #{msg}"
+
+hear /^what is the time in (.*)/i, (message) ->
+  seen.setSeenUser message.from, message.to
+  place = message.match[1]
+  time.getTime place, (err, msg) ->
     if err or not msg
       say message.to, "#{message.from}: #{err}"
     else
