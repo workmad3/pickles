@@ -8,6 +8,7 @@ fortune = require "./fortune"
 isup    = require "./isitup"
 seen    = require "./seen"
 time    = require "./time"
+imdb    = require "./imdb"
 
 irc_server   = process.env.IRC_SERVER
 irc_name     = process.env.IRC_NAME
@@ -124,6 +125,15 @@ hear /^what is the time in (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   place = message.match[1]
   time.getTime place, (err, msg) ->
+    if err or not msg
+      say message.to, "#{message.from}: #{err}"
+    else
+      say message.to, "#{message.from}: #{msg}"
+
+hear /^movie me (.*)/i, (message) ->
+  seen.setSeenUser message.from, message.to
+  query = message.match[1]
+  imdb.getMovie query, (err, msg) ->
     if err or not msg
       say message.to, "#{message.from}: #{err}"
     else
