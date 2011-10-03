@@ -1,34 +1,33 @@
 http = require 'http'
 
-API_URL = process.env.IMDB_URL
-
 exports.getMovie = getMovie = (query, callback) ->
-  term = encodeURI query
-
   opts =
-    host: API_URL
-    path: "/by/title/#{term}"
+    host: process.env.IMDB_URL
+    path: "/by/title/#{encodeURI query}"
 
   request = http.request opts, (response) ->
-    data = ""
+    if response.statusCode is 200
+      data = ""
 
-    response.setEncoding "utf8"
+      response.setEncoding "utf8"
 
-    response.on "data", (chunk) ->
-      data += chunk
+      response.on "data", (chunk) ->
+        data += chunk
 
-    response.on "end", ->
-      unless response.statusCode is 200
-        callback "Could not find results for #{query}"
-      else
+      response.on "end", ->
         body = JSON.parse data
-
+        
         if body.length is 0
           callback "Could not find results for #{query}"
         else
           title = body[0].title
-          imdb_url = "http://www.imdb.com/title/#{body[0].imdb_id}"
+          imdb_id = body[0].imdb_id
+          callback null, "#{title} - http://www.imdb.com/title/#{imdb_id}"
 
-          callback null, "#{title} - #{imdb_url}"
+      response.on "error", (error) ->
+        callback error
 
-    request.end()
+  request.on "error", (error) ->
+    callback error
+
+  request.end()
