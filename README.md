@@ -2,7 +2,7 @@
 
 ## DESCRIPTION
 
-Node.js IRC bot written in CoffeeScript.
+Friendly IRC bot written in CoffeeScript for Node.js.
 
 ## INSTALLATION
 
