@@ -2,7 +2,7 @@ http = require "http"
 
 exports.getImage = getImage = (phrase, callback) ->
   host = "ajax.googleapis.com"
-  path = "/ajax/services/search/images?v=1.0&rsz=8&q=#{encodeURI phrase}"
+  path = "/ajax/services/search/images?v=1.0&safe=off&rsz=8&q=#{encodeURI phrase}"
 
   client = http.createClient 80, host
 
