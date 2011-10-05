@@ -94,7 +94,7 @@ hear /fortune me/i, (message) ->
     else
       say message.to, fortune
 
-hear /^seen (\w+)$/i, (message) ->
+hear /^seen ([\w^_-|\{\}\[\]`\\]+)$/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
   seen.getSeenUser user, (err, msg) ->
