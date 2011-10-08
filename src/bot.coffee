@@ -143,6 +143,17 @@ hear /(it's|its|it was) (long|short|hard)/i, (message) ->
   seen.setSeenUser message.from, message.to
   say message.to, "That's what she said!"
 
+hear /^what are the pulls on (.*)/i, (message) ->
+  seen.setSeenUser message.from, message.to
+  user = message.match[1]
+  proj = message.match[2]
+  github.getPullRequests user, proj, (err, msg) ->
+    if err or not msg
+      say message.to, "#{message.from}: #{err}"
+    else
+      for pull in msg
+        say message.to, "#{pull}"
+
 hear /.*/, (message) ->
   seen.setSeenUser message.from, message.to
 
