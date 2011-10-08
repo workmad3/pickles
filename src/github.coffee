@@ -14,7 +14,7 @@ exports.getLatestCommit = getLatestCommit = (user, proj, callback) ->
     response.on "end", ->
       body = JSON.parse data
 
-      if not body[0]
+      unless body[0]
         callback "Could not find latest commit for: #{user}/#{proj}"
       else
         commit =
@@ -42,26 +42,24 @@ exports.getPullRequests = getPullRequests = (user, proj, callback) ->
 
     response.on "end", ->
       body = JSON.parse data
-      
-      if response.statusCode is 200
-        return callback null, [ "No pull requests on: #{user}/#{proj}" ] if data.length = 0
+
+      unless body[0]
+        callback "Could not find pull requests for: #{user}/#{proj}"
+      else
+        body.reverse
 
         pulls = []
 
-        data.reverse
+        if body[0]
+          pulls.push "#{body[0].title} => #{body[0].url}"
 
-        if data[0]
-          pulls.push "#{data[0].title} => #{data[0].body} - #{data[0].url}"
+        if body[1]
+          pulls.push "#{body[1].title} => #{body[1].url}"
 
-        if data[1]
-          pulls.push "#{data[1].title} => #{data[1].body} - #{data[1].url}"
-
-        if data[2]
-          pulls.push "#{data[2].title} => #{data[2].body} - #{data[2].url}"
+        if body[2]
+          pulls.push  "#{body[2].title} => #{body[2].url}"
 
         callback null, pulls
-      else
-        callback "Could not find pull requests for: #{user}/#{proj}"
 
     response.on "error", (error) ->
       callback error
