@@ -44,7 +44,7 @@ exports.getPullRequests = getPullRequests = (user, proj, callback) ->
       body = JSON.parse data
       
       if response.statusCode is 200
-        return callback null, [ "No pull requests on: #{user}/#{proj}" ]
+        return callback null, [ "No pull requests on: #{user}/#{proj}" ] if data.length = 0
 
         pulls = []
 
