@@ -4,6 +4,10 @@
 
 Friendly IRC bot written in CoffeeScript for Node.js.
 
+## IS IT GOOD?
+
+Yes.
+
 ## INSTALLATION
 
 1. Clone the repository
