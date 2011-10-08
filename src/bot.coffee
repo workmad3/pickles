@@ -139,6 +139,10 @@ hear /^movie me (.*)/i, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
+hear /(it's|its|it was) (long|short|hard)/i, (message) ->
+  seen.setSeenUser message.from, message.to
+  say message.to, "That's what she said!"
+
 hear /.*/, (message) ->
   seen.setSeenUser message.from, message.to
 
