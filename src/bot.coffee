@@ -143,7 +143,7 @@ hear /(it's|its|it was) (long|short|hard)/i, (message) ->
   seen.setSeenUser message.from, message.to
   say message.to, "That's what she said!"
 
-hear /^what are the pulls on (.*)/i, (message) ->
+hear /^what are the pulls on (.*)\/(.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
   proj = message.match[2]
