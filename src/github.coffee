@@ -50,14 +50,9 @@ exports.getPullRequests = getPullRequests = (user, proj, callback) ->
 
         pulls = []
 
-        if body[0]
-          pulls.push "#{body[0].title} => #{body[0].url}"
-
-        if body[1]
-          pulls.push "#{body[1].title} => #{body[1].url}"
-
-        if body[2]
-          pulls.push  "#{body[2].title} => #{body[2].url}"
+        pulls.push "#{body[0].title} => #{body[0].html_url}" if body[0]
+        pulls.push "#{body[1].title} => #{body[1].html_url}" if body[1]
+        pulls.push "#{body[2].title} => #{body[2].html_url}" if body[2]
 
         callback null, pulls
 
