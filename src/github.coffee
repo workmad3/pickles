@@ -1,9 +1,7 @@
 https = require "https"
 
 exports.getLatestCommit = getLatestCommit = (user, proj, callback) ->
-  opts =
-    host: "api.github.com"
-    path: "/repos/#{user}/#{proj}/commits?per_page=1"
+  opts = host: "api.github.com", path: "/repos/#{user}/#{proj}/commits?per_page=1"
 
   request = https.request opts, (response) ->
     data = ""

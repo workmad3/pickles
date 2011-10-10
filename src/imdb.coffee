@@ -1,9 +1,7 @@
 http = require 'http'
 
 exports.getMovie = getMovie = (query, callback) ->
-  opts =
-    host: process.env.IMDB_URL
-    path: "/by/title/#{encodeURI query}"
+  opts = host: process.env.IMDB_URL, path: "/by/title/#{encodeURI query}"
 
   request = http.request opts, (response) ->
     if response.statusCode is 200

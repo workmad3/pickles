@@ -5,9 +5,7 @@ query_to_woeid = {}
 getWhereOnEarthID = (wanted, callback) ->
   query = encodeURI "select woeid from geo.places where text=\"#{wanted}\" limit 1&format=json"
 
-  opts =
-    host: "query.yahooapis.com"
-    path: "/v1/public/yql?q=#{query}"
+  opts = host: "query.yahooapis.com", path: "/v1/public/yql?q=#{query}"
 
   request = http.request opts, (response) ->
     data = ""
@@ -35,9 +33,7 @@ getWhereOnEarthID = (wanted, callback) ->
   request.end()
 
 getWeatherInternal = (woeid, callback) ->
-  opts =
-    host: "weather.yahooapis.com"
-    path: "/forecastjson?w=#{woeid}&u=c"
+  opts = host: "weather.yahooapis.com", path: "/forecastjson?w=#{woeid}&u=c"
 
   request = http.request opts, (response) ->
     data = ""

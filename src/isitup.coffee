@@ -1,9 +1,7 @@
 http = require "http"
 
 exports.isItUp = isItUp = (url, callback) ->
-  opts =
-    host: "www.isup.me"
-    path: "/#{url}"
+  opts = host: "www.isup.me", path: "/#{url}"
 
   request = http.request opts, (response) ->
     data = ""
@@ -13,7 +11,6 @@ exports.isItUp = isItUp = (url, callback) ->
 
     response.on "end", ->
       body = ""
-      
 
       unknown = data.indexOf 'doesn\'t look like a site on the interwho.'
       down = data.indexOf 'looks down from here.'

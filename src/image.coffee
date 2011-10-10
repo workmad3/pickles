@@ -6,8 +6,7 @@ exports.getImage = getImage = (phrase, callback) ->
 
   client = http.createClient 80, host
 
-  headers =
-    Host: "ajax.googleapis.com"
+  headers = 'Host': "ajax.googleapis.com"
 
   request = client.request "GET", path, headers
 

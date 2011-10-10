@@ -1,9 +1,7 @@
 http = require "http"
 
 exports.getFortune = getFortune = (callback) ->
-  opts =
-    host: "www.fortunefortoday.com"
-    path: "/getfortuneonly.php"
+  opts = host: "www.fortunefortoday.com", path: "/getfortuneonly.php"
 
   request = http.request opts, (response) ->
     data = ""
