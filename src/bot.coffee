@@ -101,7 +101,7 @@ hear /fortune me/i, (message) ->
       say message.to, "#{message.from}: #{fortune}"
 
 desc 'bash me', 'Get a random quote link from bash.org'
-hear /bash me/i, (message) ->
+hear /^bash me/i, (message) ->
   seen.setSeenUser message.from, message.to
   bash.getBash (err, bash) ->
     if err or not bash
