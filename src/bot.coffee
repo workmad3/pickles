@@ -2,6 +2,7 @@ irc     = require "irc"
 sys     = require "sys"
 
 fortune = require "./fortune"
+bash    = require "./bash"
 github  = require "./github"
 image   = require "./image"
 imdb    = require "./imdb"
@@ -97,6 +98,17 @@ hear /fortune me/i, (message) ->
       say message.to, "#{message.from}: #{err}"
     else
       say message.to, "#{message.from}: #{fortune}"
+
+#
+# Bash command - 'bash me'
+#
+hear /bash me/i, (message) ->
+  seen.setSeenUser message.from, message.to
+  bash.getBash (err, bash) ->
+    if err or not fortune
+      say message.to, "#{message.from}: #{err}"
+    else
+      say message.to, "#{message.from}: #{bash}"
 
 #
 # Seen command - 'seen :nick'
