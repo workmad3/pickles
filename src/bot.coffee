@@ -158,10 +158,6 @@ hear /^movie me (.*)/i, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
-hear /(it's|its|it was) (long|short|hard)/i, (message) ->
-  seen.setSeenUser message.from, message.to
-  say message.to, "That's what she said!"
-
 desc 'what are the pulls on :user/:project', 'Get the latest pull requests for the GitHub repo :user/:project'
 hear /^what are the pulls on (.*)\/(.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
