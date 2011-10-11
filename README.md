@@ -23,6 +23,11 @@ Easy as running the command `node lib/bot.js`
 Pickles is quite clever (well not really) and can respond to quite a few
 triggers.
 
+### Help
+
+Pickles will message you privately with commands and what they do when he sees
+the trigger `pickles: help`.
+
 ### Weather
 
 Pickles will respond with the weather for now, today and tomorrow when he sees

@@ -55,7 +55,7 @@ listen = ->
 hear /^pickles: help/i, (message) ->
   say message.from, "I listen for the following..."
   for phrase, functionality of descriptions
-    say message.from, "#{phrase}: #{functionality}"
+    say message.from, "#{phrase} => #{functionality}"
 
 desc 'weather me :place', 'Get the weather for now, today and tomorrow for :place'
 hear /^weather me (.*)/i, (message) ->
