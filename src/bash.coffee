@@ -1,5 +1,4 @@
 http = require "http"
-parser = require "xml2json"
 
 exports.getBash = getBash = (callback) ->
   opts = host: "bash.org", path: "/?random"
