@@ -70,7 +70,7 @@ trigger `what is the time in :place`
 ### IMDb
 
 Pickles will respond with an IMDb link when he sees the trigger
-`movie me :move_or_tv_show`.
+`movie me :movie_or_tv_show`.
 
 ### That's what she said!
 
