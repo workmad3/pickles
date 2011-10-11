@@ -14,8 +14,9 @@ irc_server   = process.env.IRC_SERVER
 irc_name     = process.env.IRC_NAME
 irc_channels = process.env.IRC_CHANNELS.split ";"
 
-handlers = []
-client   = null
+handlers     = []
+descriptions = []
+client       = null
 
 dispatch = (message) ->
   for pair in handlers
@@ -26,6 +27,9 @@ dispatch = (message) ->
 
 hear = (pattern, callback) ->
   handlers.push [ pattern, callback ]
+
+desc = (phrase, functionality) ->
+  descriptions[phrase] = functionality
 
 say = (channel, message) ->
   client.say channel, message
@@ -48,9 +52,12 @@ listen = ->
   client.addListener "error", (message) ->
     error message
 
-#
-# Weather command - 'weather me :location'
-#
+hear /^pickles: help/i, (message) ->
+  say message.from, "I listen for the following..."
+  for phrase, functionality of descriptions
+    say message.from, "#{phrase}: #{functionality}"
+
+desc 'weather me :place', 'Get the weather for now, today and tomorrow for :place'
 hear /^weather me (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   location = message.match[1]
@@ -62,9 +69,7 @@ hear /^weather me (.*)/i, (message) ->
       say message.to, "Today: #{weather.today}"
       say message.to, "Tomorrow: #{weather.tomorrow}"
 
-#
-# Image command - 'image me :term'
-#
+desc 'image me :phrase', 'Get a random image from Google Images for the search :phrase'
 hear /^image me (.*)$/i, (message) ->
   seen.setSeenUser message.from, message.to
   phrase = message.match[1]
@@ -74,9 +79,7 @@ hear /^image me (.*)$/i, (message) ->
     else
       say message.to, image
 
-#
-# Commit command - 'commit me :user/:project'
-#
+desc 'commit me :user/:project', 'Get the latest commit for the GitHub repo :user/:project'
 hear /^commit me (.*)\/(.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
@@ -87,9 +90,7 @@ hear /^commit me (.*)\/(.*)/i, (message) ->
     else
       say message.to, "#{commit.author} commited '#{commit.message}' to #{user}/#{proj} on #{commit.date}"
 
-#
-# Fortune command - 'fortune me'
-#
+desc 'fortune me', 'Get a poorly formatted fortune'
 hear /fortune me/i, (message) ->
   seen.setSeenUser message.from, message.to
   fortune.getFortune (err, fortune) ->
@@ -98,9 +99,7 @@ hear /fortune me/i, (message) ->
     else
       say message.to, "#{message.from}: #{fortune}"
 
-#
-# Seen command - 'seen :nick'
-#
+desc 'seen :nick', 'Get when I last saw :nick and in which channel'
 hear /^seen ([\w^_-|\{\}\[\]`\\]+)$/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
@@ -110,9 +109,7 @@ hear /^seen ([\w^_-|\{\}\[\]`\\]+)$/i, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
-#
-# Roll command - 'roll me :sides'
-#
+desc 'roll me :side', 'Get a random number based on a die roll with :sides or 6 sides'
 hear /^roll me ?(\d*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   sides = parseInt message.match[1] or 6
@@ -121,9 +118,7 @@ hear /^roll me ?(\d*)/i, (message) ->
   else
     say message.to, "#{message.from} rolls a #{sides} sided die and gets #{Math.floor(Math.random() * sides) + 1}"
 
-#
-# Website status command - 'is :domain up'
-#
+desc 'is :domain up', 'Get the status of the website hosted at :domain'
 hear /^is (.*) up/, (message) ->
   seen.setSeenUser message.from, message.to
   url = message.match[1]
@@ -133,9 +128,7 @@ hear /^is (.*) up/, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
-#
-# Time command - 'what is the time in :city'
-#
+desc 'what is the time in :place', 'Get the current time in :place'
 hear /^what is the time in (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   place = message.match[1]
@@ -145,9 +138,7 @@ hear /^what is the time in (.*)/i, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
-#
-# Movie command - 'movie me :movie_or_tv_show'
-#
+desc 'movie me :movie_or_tv_show', 'Get the IMDb link for :movie_or_tv_show'
 hear /^movie me (.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   query = message.match[1]
@@ -157,16 +148,11 @@ hear /^movie me (.*)/i, (message) ->
     else
       say message.to, "#{message.from}: #{msg}"
 
-#
-# That's what she said command
-#
 hear /(it's|its|it was) (long|short|hard)/i, (message) ->
   seen.setSeenUser message.from, message.to
   say message.to, "That's what she said!"
 
-#
-# Pull requests command - 'what are the pulls on :user/:project'
-#
+desc 'what are the pulls on :user/:project', 'Get the latest pull requests for the GitHub repo :user/:project'
 hear /^what are the pulls on (.*)\/(.*)/i, (message) ->
   seen.setSeenUser message.from, message.to
   user = message.match[1]
