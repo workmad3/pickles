@@ -13,7 +13,8 @@ exports.getBash = getBash = (callback) ->
       data = data.replace(/[\s\S]*?<p class="qt">/m, '').replace(/<\/p>[\s\S]*$/m, '')
       data = data.replace(/&lt;/mg, "<").replace(/&gt;/mg, ">").replace(/&quot;/mg, "'")
       data = data.replace(/<br \/>/mg, "")
-      data = data.replace(/\n/mg, "; ")
+      data = data.replace(/\n/g, "; ")
+      data = data.replace(/\s/g, ' ')
       quote = data
 
       if not quote
